@@ -12,7 +12,9 @@ The `total.ts` file encompasses the entire process within a single file. However
 
 ## stack features and stack deployment order
 
-* `ecr-stack`   The purpose of this stack is to create a repository where Docker container images can be stored and managed.
+### `ecr-stack`  
+
+The purpose of this stack is to create a repository where Docker container images can be stored and managed.
 
 To begin, the stack instantiates an ECR repository named "test-server". This repository holds Docker images and supports the removal policy of "DESTROY," ensuring that resources can be effectively managed.
 
