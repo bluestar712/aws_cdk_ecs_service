@@ -57,7 +57,7 @@ export class Total extends cdk.Stack {
         "AmazonEC2ContainerRegistryReadOnly"
       )
     );
-
+    
     const taskDefinition = new ecs.FargateTaskDefinition(
       this,
       "MyTaskDefinition",
