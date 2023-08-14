@@ -25,19 +25,25 @@ As part of the deployment workflow, the cdk-ecr-deployment package is employed. 
 To provide visibility into the repository's location, an output is generated using the CfnOutput construct. This output exposes the URI of the ECR repository through the "ECRRepositoryUri" key, allowing other components of the infrastructure to access the repository as needed.
 
 
-* `ecs-task-definition-stack`  The ECS Task Definition Stack focuses on defining how your applications should run inside containers. It creates an execution role that grants necessary permissions, like pulling images from the ECR repository. Using this role, the stack sets up a Fargate Task Definition, acting as a blueprint for your application's environment.
+### `ecs-task-definition-stack`  
+
+The ECS Task Definition Stack focuses on defining how your applications should run inside containers. It creates an execution role that grants necessary permissions, like pulling images from the ECR repository. Using this role, the stack sets up a Fargate Task Definition, acting as a blueprint for your application's environment.
 
 Within this task definition, a container named "MyContainer" is established. It utilizes a Docker image from the ECR repository provided through the stack's input. The container's resource requirements are specified, with a memory limit of 1024 MiB and a CPU allocation of 512 units. Importantly, the container is configured to communicate through port 6054.
 
 Upon completion, the stack outputs the finalized task definition, ensuring that your applications can be consistently deployed and executed within containers, with all necessary configurations in place. This streamlines the process of launching your applications and ensures they run smoothly and efficiently within their designated containers.
 
-* `vpc stack`   The VPC stack creates and configures a Virtual Private Cloud (VPC) environment within the AWS infrastructure. The stack defines a VPC with the specified CIDR range "10.0.0.0/16", which determines the range of private IP addresses available for resources within the VPC.
+### `vpc stack`   
+
+The VPC stack creates and configures a Virtual Private Cloud (VPC) environment within the AWS infrastructure. The stack defines a VPC with the specified CIDR range "10.0.0.0/16", which determines the range of private IP addresses available for resources within the VPC.
 
 This VPC is designed to support high availability with a maximum of three Availability Zones (AZs). The stack establishes a public subnet named "PublicSubnet" within the VPC, configured to be a public subnet. This means resources deployed in this subnet can have public IP addresses and can be accessed from the internet. The subnet is defined with a subnet mask of 24 bits, represented as "10.0.1.0/24".
 
 Upon successful deployment of this stack, it exports the VPC's unique identifier (vpcId) as an output. This identifier can be utilized by other components of the infrastructure to interact with resources within the VPC. The VpcStack class also exposes the VPC instance (vpc) as a public property, allowing other stacks to reference and utilize the VPC configuration.
 
-* `security-group-stack`   The Security Group stack is responsible for defining and configuring a security group within the specified Virtual Private Cloud (VPC). This security group is designed to manage inbound and outbound traffic for resources within the VPC.
+### `security-group-stack`   
+
+The Security Group stack is responsible for defining and configuring a security group within the specified Virtual Private Cloud (VPC). This security group is designed to manage inbound and outbound traffic for resources within the VPC.
 
 The stack utilizes the provided vpc as a prop to ensure that the security group is associated with the correct VPC. The security group is created with the name "LoadBalancerSecurityGroup" and is configured to allow all outbound traffic, facilitating communication from resources within the VPC to external destinations.
 
@@ -45,7 +51,9 @@ In addition, an inbound rule is added to the security group. This rule allows in
 
 Upon successful deployment of this stack, the stack instance retains a reference to the created security group (securityGroup). This allows other components of the infrastructure to reference and utilize this security group for managing network traffic and access controls within the specified VPC.
 
-* `ecs-cluster-stack`   The ECS Cluster stack is dedicated to establishing and configuring an Amazon Elastic Container Service (ECS) cluster within the provided Virtual Private Cloud (VPC). This cluster serves as a platform for managing and deploying containerized applications.
+### `ecs-cluster-stack`   
+
+The ECS Cluster stack is dedicated to establishing and configuring an Amazon Elastic Container Service (ECS) cluster within the provided Virtual Private Cloud (VPC). This cluster serves as a platform for managing and deploying containerized applications.
 
 The stack leverages the vpc, taskDefinition, and securityGroup props to ensure integration with the specified VPC, task definition, and security group, respectively.
 
@@ -55,7 +63,9 @@ The associated security group (securityGroup) helps control network access to in
 
 Upon successful deployment of this stack, the created ECS cluster instance (cluster) and Fargate service instance (service) are retained. These instances can be accessed and utilized by other components of the infrastructure for deploying and managing containerized applications in an orchestrated manner within the specified VPC.
 
-* `target-group-stack`   The Target Group stack plays a crucial role in configuring an Application Load Balancer's target group within the specified Virtual Private Cloud (VPC). This target group directs incoming traffic to specific resources registered as targets, facilitating load balancing and routing of requests.
+### `target-group-stack`   
+
+The Target Group stack plays a crucial role in configuring an Application Load Balancer's target group within the specified Virtual Private Cloud (VPC). This target group directs incoming traffic to specific resources registered as targets, facilitating load balancing and routing of requests.
 
 The stack relies on the vpc and service props to ensure seamless integration with the designated VPC and the Fargate service.
 
@@ -65,7 +75,9 @@ The target group's health check settings ensure continuous monitoring of the reg
 
 Upon successful deployment of this stack, the created Application Target Group instance (targetGroup) is retained. This instance can be employed by other components of the infrastructure, allowing the Application Load Balancer to effectively distribute incoming traffic among the registered resources within the specified VPC.
 
-* `loadbalancer-stack`   The Load Balancer stack plays a pivotal role in orchestrating the creation and configuration of an Amazon Elastic Load Balancer (ELB) within the designated Virtual Private Cloud (VPC). The ELB efficiently distributes incoming traffic across registered resources, enhancing the availability and scalability of applications.
+### `loadbalancer-stack`   
+
+The Load Balancer stack plays a pivotal role in orchestrating the creation and configuration of an Amazon Elastic Load Balancer (ELB) within the designated Virtual Private Cloud (VPC). The ELB efficiently distributes incoming traffic across registered resources, enhancing the availability and scalability of applications.
 
 This stack leverages the vpc, securityGroup, and targetGroup props to ensure seamless integration with the specified VPC, a custom security group, and an Application Target Group, respectively.
 
@@ -75,7 +87,9 @@ The ALB's listener configuration is established, allowing it to communicate over
 
 Upon successful deployment of this stack, the Amazon Elastic Load Balancer instance is instantiated with the defined properties, seamlessly routing incoming traffic to the appropriate resources based on the configured load balancing rules.
 
-* `cloudwatch-stack`   The CloudWatch stack plays a critical role in setting up monitoring and alerting for Amazon Web Services (AWS) resources, ensuring proactive management and swift response to potential issues within the infrastructure.
+### `cloudwatch-stack`   
+
+The CloudWatch stack plays a critical role in setting up monitoring and alerting for Amazon Web Services (AWS) resources, ensuring proactive management and swift response to potential issues within the infrastructure.
 
 This stack is designed to work seamlessly with Amazon Elastic Container Service (ECS) clusters and Fargate services, as indicated by the cluster and service props.
 
@@ -89,7 +103,9 @@ The CloudWatch alarm action is configured to notify the SNS topic upon activatio
 
 Upon successful deployment of this stack, the CloudWatch alarm (cloudWatchAlarm) is fully functional, proactively monitoring ECS resources' memory utilization and initiating notifications through the SNS topic in case of breaches. This setup empowers AWS users to promptly address potential issues and maintain the health and stability of their infrastructure.
 
-* `autoscaling-stack`   The Auto Scaling stack plays a pivotal role in dynamically adjusting the capacity of an Amazon ECS Fargate service based on predefined metrics and thresholds. This capability ensures that the infrastructure scales appropriately in response to changing workload demands.
+### `autoscaling-stack`   
+
+The Auto Scaling stack plays a pivotal role in dynamically adjusting the capacity of an Amazon ECS Fargate service based on predefined metrics and thresholds. This capability ensures that the infrastructure scales appropriately in response to changing workload demands.
 
 Aligned with the ECS Fargate service (service) and a CloudWatch alarm (cloudWatchAlarm), this stack operates seamlessly to facilitate automatic scaling of the service.
 
