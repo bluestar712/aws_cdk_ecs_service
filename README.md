@@ -53,7 +53,7 @@ The associated security group (securityGroup) helps control network access to in
 
 Upon successful deployment of this stack, the created ECS cluster instance (cluster) and Fargate service instance (service) are retained. These instances can be accessed and utilized by other components of the infrastructure for deploying and managing containerized applications in an orchestrated manner within the specified VPC.
 
-* `target-group-stack.ts`   The Target Group stack plays a crucial role in configuring an Application Load Balancer's target group within the specified Virtual Private Cloud (VPC). This target group directs incoming traffic to specific resources registered as targets, facilitating load balancing and routing of requests.
+* `target-group-stack`   The Target Group stack plays a crucial role in configuring an Application Load Balancer's target group within the specified Virtual Private Cloud (VPC). This target group directs incoming traffic to specific resources registered as targets, facilitating load balancing and routing of requests.
 
 The stack relies on the vpc and service props to ensure seamless integration with the designated VPC and the Fargate service.
 
